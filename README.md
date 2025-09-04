@@ -60,6 +60,3 @@ This is the artifact associated with the paper:
   year      = {2026},
   note      = {To appear}
 }
-
-
-Then run YCSB workloads.
