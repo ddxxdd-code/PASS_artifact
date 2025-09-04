@@ -1,0 +1,11 @@
+system,power,p99_latency_usecs
+pass,270,426
+pass,300,415
+pass,330,87
+pass,380,58
+pass,440,59
+thunderbolt,270,418
+thunderbolt,300,283
+thunderbolt,330,233
+thunderbolt,380,60
+thunderbolt,440,92

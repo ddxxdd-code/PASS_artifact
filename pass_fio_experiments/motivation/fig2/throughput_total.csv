@@ -1,0 +1,11 @@
+system,power,throughput_GiBs
+pass,270,8.837
+pass,300,12.0
+pass,330,18.8
+pass,380,21.3
+pass,440,20.1
+thunderbolt,270,9.148
+thunderbolt,300,14.3
+thunderbolt,330,16.8
+thunderbolt,380,21.2
+thunderbolt,440,19.6

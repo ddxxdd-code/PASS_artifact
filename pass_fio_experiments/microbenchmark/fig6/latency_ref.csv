@@ -1,0 +1,26 @@
+power,system,p99 latency
+280,pass,408
+290,pass,202
+350,pass,90
+440,pass,91
+480,pass,92
+280,ssd_bw_only,
+290,ssd_bw_only,
+350,ssd_bw_only,
+440,ssd_bw_only,21000
+480,ssd_bw_only,92
+280,cpu_bw_only,
+290,cpu_bw_only,
+350,cpu_bw_only,125
+440,cpu_bw_only,97
+480,cpu_bw_only,92
+280,cpu_jailing_only,
+290,cpu_jailing_only,
+350,cpu_jailing_only,
+440,cpu_jailing_only,
+480,cpu_jailing_only,92
+280,rapl_only,
+290,rapl_only,265
+350,rapl_only,92
+440,rapl_only,92
+480,rapl_only,92

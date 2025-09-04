@@ -1,0 +1,7 @@
+Polling Interval,P99 Latency (us),Throughput (kiops),Power (W),Num Cores,Type
+110842,334,1096,370,1,Masking
+17558,139,1941,390,2,Masking
+6384,133,2535,417,3,Masking
+5570,131,2744,437,4,Masking
+3468,92,2907,460,6,Masking
+2442,91,3311,464,8,Masking

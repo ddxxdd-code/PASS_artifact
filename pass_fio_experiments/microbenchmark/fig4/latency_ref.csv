@@ -1,0 +1,23 @@
+system,config,power,p99 latency
+pass,c8d10,440,167
+pass,c8d10,360,172
+pass,c8d10,300,174
+pass,c8d10,260,725
+thunderbolt,c8d10,440,190
+thunderbolt,c8d10,360,239
+thunderbolt,c8d10,300,379
+thunderbolt,c8d10,260,299893
+pass,c8d5,440,159
+pass,c8d5,360,159
+pass,c8d5,300,159
+pass,c8d5,260,529
+thunderbolt,c8d5,440,186
+thunderbolt,c8d5,360,359
+thunderbolt,c8d5,300,445
+thunderbolt,c8d5,260,100140
+pass,c1d10,360,157
+pass,c1d10,300,251
+pass,c1d10,260,510
+thunderbolt,c1d10,360,157
+thunderbolt,c1d10,300,553
+thunderbolt,c1d10,260,611

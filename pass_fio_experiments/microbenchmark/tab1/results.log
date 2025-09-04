@@ -1,0 +1,129 @@
+On our machine: 8c 146W RAPL 100%per core:
+Random write 4KiB 16 jobs
+367W
+$ sudo fio rwrite_4k_linux_nvmf_10_disk.fio 
+bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8): No such file or directory
+test_64kb_rread_5n1: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+test_64kb_rread_5n2: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+test_64kb_rread_5n3: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+test_64kb_rread_5n4: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+test_64kb_rread_5n5: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+test_64kb_rread_5n6: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+test_64kb_rread_5n7: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+test_64kb_rread_5n8: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+test_64kb_rread_5n9: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+test_64kb_rread_5n10: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+fio-3.37-124-gbcd4
+Starting 160 threads
+Jobs: 6 (f=0): [_(12),f(1),_(4),f(1),_(5),f(1),_(11),f(1),_(21),f(1),_(54),f(1),_(15),E(1),_(31)][100.0%][w=3929MiB/s][w=1006k IOPS][eta 00m:00s]
+test_64kb_rread_5n1: (groupid=0, jobs=160): err= 0: pid=923449: Wed May 14 06:01:36 2025
+  write: IOPS=2930k, BW=11.2GiB/s (12.0GB/s)(338GiB/30280msec); 0 zone resets
+    clat (usec): min=16, max=12980, avg=52.30, stdev=21.32
+     lat (usec): min=16, max=12980, avg=52.42, stdev=21.39
+    clat percentiles (usec):
+     |  1.00th=[   34],  5.00th=[   38], 10.00th=[   40], 20.00th=[   43],
+     | 30.00th=[   45], 40.00th=[   48], 50.00th=[   50], 60.00th=[   52],
+     | 70.00th=[   56], 80.00th=[   61], 90.00th=[   69], 95.00th=[   76],
+     | 99.00th=[   92], 99.50th=[  101], 99.90th=[  153], 99.95th=[  190],
+     | 99.99th=[  326]
+   bw (  MiB/s): min= 9901, max=12599, per=100.00%, avg=11543.59, stdev= 2.51, samples=9590
+   iops        : min=2534651, max=3225526, avg=2955150.89, stdev=642.22, samples=9590
+  lat (usec)   : 20=0.01%, 50=52.19%, 100=47.28%, 250=0.50%, 500=0.02%
+  lat (usec)   : 750=0.01%, 1000=0.01%
+  lat (msec)   : 2=0.01%, 4=0.01%, 10=0.01%, 20=0.01%
+  cpu          : usr=3.09%, sys=21.42%, ctx=89093622, majf=0, minf=17156397
+  IO depths    : 1=100.0%, 2=0.0%, 4=0.0%, 8=0.0%, 16=0.0%, 32=0.0%, >=64=0.0%
+     submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+     issued rwts: total=0,88716572,0,0 short=0,0,0,0 dropped=0,0,0,0
+     latency   : target=0, window=0, percentile=100.00%, depth=1
+
+Run status group 0 (all jobs):
+  WRITE: bw=11.2GiB/s (12.0GB/s), 11.2GiB/s-11.2GiB/s (12.0GB/s-12.0GB/s), io=338GiB (363GB), run=30280-30280msec
+
+Disk stats (read/write):
+  nvme5n1: ios=743/9075202, sectors=38162/72601616, merge=0/0, ticks=151/336008, in_queue=336159, util=97.54%
+  nvme5n2: ios=480/8991549, sectors=21200/71932392, merge=0/0, ticks=55/335797, in_queue=335852, util=98.07%
+  nvme5n3: ios=336/8961228, sectors=14840/71689824, merge=0/0, ticks=54/335600, in_queue=335654, util=98.09%
+  nvme5n4: ios=480/8839861, sectors=21200/70718888, merge=0/0, ticks=70/338400, in_queue=338470, util=98.38%
+  nvme5n5: ios=432/8825372, sectors=19080/70602976, merge=0/0, ticks=49/338167, in_queue=338216, util=98.28%
+  nvme5n6: ios=339/8804333, sectors=14864/70434664, merge=0/0, ticks=53/337604, in_queue=337657, util=98.32%
+  nvme5n7: ios=528/8716826, sectors=23320/69734608, merge=0/0, ticks=52/338052, in_queue=338104, util=98.43%
+  nvme5n8: ios=249/8752530, sectors=10672/70020240, merge=0/0, ticks=30/338532, in_queue=338562, util=98.09%
+  nvme5n9: ios=288/8863135, sectors=12720/70905080, merge=0/0, ticks=44/336866, in_queue=336910, util=98.30%
+  nvme5n10: ios=199/8733538, sectors=8536/69868304, merge=0/0, ticks=35/339354, in_queue=339389, util=97.95%
+
+Next, we need a strategy found on sm220u
+14 cores 10% each, 150W
+$ sudo fio rwrite_4k_linux_nvmf_10_disk.fio 
+bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8): No such file or directory
+test_64kb_rread_5n1: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+test_64kb_rread_5n2: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+test_64kb_rread_5n3: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+test_64kb_rread_5n4: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+test_64kb_rread_5n5: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+test_64kb_rread_5n6: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+test_64kb_rread_5n7: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+test_64kb_rread_5n8: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+test_64kb_rread_5n9: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+test_64kb_rread_5n10: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+fio-3.37-124-gbcd4
+Starting 160 threads
+Jobs: 151 (f=138): [w(19),f(1),w(1),E(1),w(6),f(1),w(10),f(2),w(4),f(1),w(8),f(1),w(10),f(1),w(3),_(1),w(5),f(1),w(17),E(1),w(4),f(1),w(3),f(2),w(1),_(4),w(9),f(1),w(35),_(1),w(1),_(1),w(2),f(1)][12.9%][w=968MiB/s][w=248k IOPS][eta 03m:30s]
+test_64kb_rread_5n1: (groupid=0, jobs=160): err= 0: pid=924601: Wed May 14 06:08:29 2025
+  write: IOPS=239k, BW=933MiB/s (978MB/s)(27.4GiB/30093msec); 0 zone resets
+    clat (usec): min=14, max=96832, avg=667.15, stdev=7514.63
+     lat (usec): min=15, max=96832, avg=667.27, stdev=7514.63
+    clat percentiles (usec):
+     |  1.00th=[   19],  5.00th=[   21], 10.00th=[   22], 20.00th=[   25],
+     | 30.00th=[   41], 40.00th=[   47], 50.00th=[   51], 60.00th=[   56],
+     | 70.00th=[   60], 80.00th=[   67], 90.00th=[   77], 95.00th=[   87],
+     | 99.00th=[  219], 99.50th=[92799], 99.90th=[93848], 99.95th=[93848],
+     | 99.99th=[93848]
+   bw (  KiB/s): min=628122, max=1603929, per=100.00%, avg=956143.17, stdev=1431.71, samples=9533
+   iops        : min=157024, max=400975, avg=239029.57, stdev=357.93, samples=9533
+  lat (usec)   : 20=4.32%, 50=43.14%, 100=50.14%, 250=1.54%, 500=0.19%
+  lat (usec)   : 750=0.01%, 1000=0.01%
+  lat (msec)   : 2=0.01%, 4=0.01%, 10=0.01%, 20=0.01%, 50=0.01%
+  lat (msec)   : 100=0.67%
+  cpu          : usr=0.31%, sys=1.67%, ctx=7251352, majf=0, minf=0
+  IO depths    : 1=100.0%, 2=0.0%, 4=0.0%, 8=0.0%, 16=0.0%, 32=0.0%, >=64=0.0%
+     submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+     issued rwts: total=0,7185563,0,0 short=0,0,0,0 dropped=0,0,0,0
+     latency   : target=0, window=0, percentile=100.00%, depth=1
+
+Run status group 0 (all jobs):
+  WRITE: bw=933MiB/s (978MB/s), 933MiB/s-933MiB/s (978MB/s-978MB/s), io=27.4GiB (29.4GB), run=30093-30093msec
+
+Disk stats (read/write):
+  nvme5n1: ios=53/708253, sectors=3833/5666024, merge=0/0, ticks=93/467294, in_queue=467387, util=100.00%
+  nvme5n2: ios=15/716626, sectors=120/5733008, merge=0/0, ticks=96/467344, in_queue=467440, util=98.50%
+  nvme5n3: ios=15/721506, sectors=120/5772048, merge=0/0, ticks=2/467221, in_queue=467223, util=98.58%
+  nvme5n4: ios=9/720994, sectors=72/5767952, merge=0/0, ticks=1/467562, in_queue=467563, util=98.63%
+  nvme5n5: ios=121/719121, sectors=6128/5752968, merge=0/0, ticks=547/467221, in_queue=467768, util=98.95%
+  nvme5n6: ios=12/723592, sectors=96/5788736, merge=0/0, ticks=1/467412, in_queue=467413, util=98.72%
+  nvme5n7: ios=31/715371, sectors=248/5722968, merge=0/0, ticks=7/467738, in_queue=467745, util=98.89%
+  nvme5n8: ios=17/722797, sectors=136/5782376, merge=0/0, ticks=89/467466, in_queue=467555, util=98.82%
+  nvme5n9: ios=35/717703, sectors=2016/5741624, merge=0/0, ticks=91/467520, in_queue=467611, util=98.62%
+  nvme5n10: ios=107/716862, sectors=4752/5734896, merge=0/0, ticks=521/467463, in_queue=467984, util=99.00%

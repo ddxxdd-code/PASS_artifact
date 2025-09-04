@@ -1,0 +1,8 @@
+Polling Interval,P99 Latency (us),Throughput (kiops),Power (W),Bandwidth,Type
+308976,200279,3.6,317,1,Bandwidth
+162932,95945,29.5,320,5,Bandwidth
+155740,90702,75.0,330,10,Bandwidth
+137770,85459,117.0,335,15,Bandwidth
+132150,611,226.0,340,25,Bandwidth
+127440,482,471.0,350,50,Bandwidth
+110284,334,1096.0,370,100,Bandwidth

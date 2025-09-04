@@ -1,0 +1,11 @@
+system,power,throughput
+pass,440,16.0
+pass,380,15.6
+pass,330,15.0
+pass,300,10.5
+pass,270,3.2255859375
+thunderbolt,440,13.4
+thunderbolt,380,10.2
+thunderbolt,330,8.6484375
+thunderbolt,300,3.4013671875
+thunderbolt,270,0.58740234375

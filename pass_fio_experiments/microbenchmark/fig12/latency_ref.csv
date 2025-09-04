@@ -1,0 +1,9 @@
+system,power,p99 latency
+thunderbolt,440,388
+thunderbolt,360,437
+thunderbolt,300,12125
+thunderbolt,260,100140
+pass,440,262
+pass,360,262
+pass,300,262
+pass,260,717

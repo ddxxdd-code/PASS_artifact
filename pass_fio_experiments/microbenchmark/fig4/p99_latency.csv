@@ -1,0 +1,5 @@
+system,config,power,p99 latency
+pass,c8d10,300,182
+pass,c8d10,440,176
+thunderbolt,c8d10,300,58459
+thunderbolt,c8d10,440,174
