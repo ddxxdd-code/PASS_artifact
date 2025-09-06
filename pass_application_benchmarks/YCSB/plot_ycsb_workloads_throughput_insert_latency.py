@@ -40,7 +40,7 @@ colors       = {
 }
 
 # ────────────────────────────── Load data ──────────────────────────────── #
-data      = pd.read_csv("ycsb_throughput_combined.csv")
+data      = pd.read_csv("ycsb_throughput_combined_ref.csv")
 workloads = ["workloada", "workloadb", "workloadc", "workloadd", "workloadf"]
 
 # ───────────────────────────── Figure setup ─────────────────────────────── #

@@ -1,41 +1,42 @@
 #!/usr/bin/env bash
-# Orchestrate YCSB experiments using run_all_ycsb_tests.sh
+# Orchestrate db_bench experiments using run_db_bench_tests_60s_int.sh
 # Systems & caps:
 #   - linux:        500 (unlimited)
 #   - pass:         500 265 300 350 400
 #   - thunderbolt:  500 265 300 350 400
 #
-# Output layout:
-#   <scheduler>_<cap>/... (logs/results produced by your YCSB runner)
+# Layout expected:
+#   <scheduler>_<cap>/... (logs/results produced by your db_bench runner)
 
 set -euo pipefail
 
 # ─────────────── Paths ───────────────
 current_path=$(pwd)
-configs_path="$current_path/../../../utils"
+configs_path="$current_path/../../utils"
 
-RUN_YCSB="./run_all_ycsb_tests.sh"  # your YCSB entrypoint
-AGG_ONE="./compute_aggregated_all_workloads_bandwidths_method_and_cap.sh"
-MERGE_ONE="./merge_aggregated_throughput_method_and_cap.py"
-PLOT_ALL="./plot_ycsb_workloads_throughput_method_and_cap.py"
+# db_bench entry script(s)
+RUN_DB_1="./run_db_bench_tests_60s_int.sh"   # preferred
+RUN_DB_2="./db_bench_tests_60s_int"          # alternate name some trees use
+
+# Aggregation & plotting
+AGG_DB="./aggregate_all_db_bench_results.sh"
+PLOT_DB="plot_db_bench_all_one_figure_insert_unlimited.py"
 
 # ─────────────── Validations ─────────
-[[ -x "$RUN_YCSB" ]] || { echo "ERROR: $RUN_YCSB not found or not executable."; exit 1; }
-[[ -x "$AGG_ONE"  ]] || { echo "ERROR: $AGG_ONE not found or not executable.";  exit 1; }
+if [[ -x "$RUN_DB_1" ]]; then RUN_DB="$RUN_DB_1"
+elif [[ -x "$RUN_DB_2" ]]; then RUN_DB="$RUN_DB_2"
+else
+  echo "ERROR: Could not find executable db_bench runner: $RUN_DB_1 or $RUN_DB_2"
+  exit 1
+fi
+
+[[ -x "$AGG_DB" ]] || { echo "ERROR: $AGG_DB not found or not executable."; exit 1; }
 command -v python3 >/dev/null || { echo "ERROR: python3 not in PATH."; exit 1; }
 
 # ─────────────── Parameters ──────────
 LINUX_CAPS=(500)
-PASS_CAPS=(500 265 300 350 400)
-TB_CAPS=(500 265 300 350 400)
-
-# Map scheduler tag → YCSB aggregation "method" name
-# Adjust these if your YCSB aggregation expects different identifiers.
-declare -A METHOD_MAP=(
-  [linux]="linux_rapl"
-  [pass]="pass_profiled"
-  [thunderbolt]="cpu_thunderbolt"
-)
+PASS_CAPS=(500)
+TB_CAPS=(500)
 
 CONNECT_SLEEP=1
 BUDGET_SLEEP=1
@@ -52,7 +53,7 @@ rebuild_and_mount() {
 }
 
 clean_mounted_disks() {
-  # Clean AFTER mounting, BEFORE each YCSB run
+  # IMPORTANT: clean AFTER mounting, BEFORE running db_bench
   "$configs_path/clean_test_disks.sh"
 }
 
@@ -75,34 +76,29 @@ cleanup_all() {
   umount_all
   disconnect_all
   stop_spdk_all
-  "$configs_path/cleanup_linux_nvmf_target.sh"
+  "$configs_path/cleanup_linux_nvmf_target.sh" || true
   "$configs_path/clean_remote_target_all_10_disks.sh"
   set -e
 }
 
-run_ycsb_into_dir() {
+run_db_into_dir() {
   # $1 = scheduler (linux|pass|thunderbolt), $2 = cap
   local sched cap outdir
   sched="$1"
   cap="$2"
   outdir="${sched}_${cap}"
-
+  
   ensure_dir "$outdir"
-  echo "[RUN] YCSB: $sched (cap=$cap) via $RUN_YCSB"
-  "$RUN_YCSB" -s "$outdir"
+  echo "[RUN] db_bench: $sched (cap=$cap) via $RUN_DB"
+  # If your db_bench runner accepts -s like filebench, pass it along:
+  "$RUN_DB" -s "$outdir"
 }
 
-aggregate_method_cap() {
-  # $1 = scheduler tag, $2 = cap
+aggregate_one() {
   local sched="$1" cap="$2"
-  local method="${METHOD_MAP[$sched]}"
-  if [[ -z "${method:-}" ]]; then
-    echo "WARN: No method mapping for scheduler '$sched' — skipping aggregation."
-    return 0
-  fi
-  echo "[AGG] method=${method}, powercap=${cap}"
-  "$AGG_ONE" -m "${method}" -c "${cap}"
-  python3 "$MERGE_ONE" -m "${method}" -c "${cap}"
+  echo "[AGG] $sched $cap"
+  # Assuming the aggregator mirrors filebench's interface:
+  "$AGG_DB" -s "$sched" -c "$cap"
 }
 
 # ─────────────── Flow ────────────────
@@ -117,35 +113,31 @@ pause "$CONNECT_SLEEP"
 
 echo "[LINUX] rebuild & mount"
 rebuild_and_mount
-# echo "[LINUX] clean mounted disks before YCSB"
+# echo "[LINUX] clean mounted disks before db_bench"
 # clean_mounted_disks
-echo "[LINUX] initialize DB with load_all_ycsb_workloads.sh"
-./load_all_ycsb_workloads.sh
 
 for cap in "${LINUX_CAPS[@]}"; do
-  echo "[LINUX] YCSB run_all (cap=$cap)"
-  run_ycsb_into_dir "linux" "$cap"
-  aggregate_method_cap "linux" "$cap"
+  echo "[LINUX] db_bench run_all (cap=$cap)"
+  run_db_into_dir "linux" "$cap"
 done
 
 echo "[LINUX] unmount & disconnect"
 umount_all
 "$configs_path/disconnect_nvmf_target.sh" linux_nvmf
 "$configs_path/cleanup_linux_nvmf_target.sh"
-"$configs_path/clean_remote_target_all_10_disks.sh"
 pause "$CONNECT_SLEEP"
 
 # === 2) SPDK bring-up (shared for PASS & Thunderbolt) ===
 echo "[SPDK] setup"
+"$configs_path/clean_remote_target_all_10_disks.sh"
 "$configs_path/setup_spdk_nvmf_target.sh"
 "$configs_path/begin_spdk_nvmf_target.sh"
 "$configs_path/connect_nvmf_target.sh" spdk
-rebuild_and_mount
 pause "$CONNECT_SLEEP"
 
 # --- 2a) PASS ---
-echo "[PASS] initialize DB with load_all_ycsb_workloads.sh"
-./load_all_ycsb_workloads.sh
+echo "[PASS] rebuild & mount"
+rebuild_and_mount
 echo "[PASS] begin controller"
 "$configs_path/reset_remote_cpu.sh" || true
 "$configs_path/begin_remote_pass.sh"
@@ -157,28 +149,20 @@ for cap in "${PASS_CAPS[@]}"; do
 
   # echo "[PASS] rebuild & mount"
   # rebuild_and_mount
-  # echo "[PASS] clean mounted disks before YCSB"
-  # clean_mounted_disks
+  echo "[PASS] clean mounted disks before db_bench"
+  clean_mounted_disks
 
-  run_ycsb_into_dir "pass" "$cap"
-  aggregate_method_cap "pass" "$cap"
+  run_db_into_dir "pass" "$cap"
 done
-
-# echo "[PASS] unmount disks"
-# umount_all
 
 echo "[PASS] end controller & reset CPU"
 "$configs_path/end_remote_pass.sh"
-"$configs_path/set_remote_cpu_schedutil.sh"
-clean_mounted_disks
+"$configs_path/reset_remote_cpu.sh" || true
 
 # --- 2b) Thunderbolt/Dynamic ---
-echo "[TB] initialize DB with load_all_ycsb_workloads.sh"
-./load_all_ycsb_workloads.sh
-
 echo "[TB] configure dynamic scheduler"
 "$configs_path/run_remote_batched_rpc.sh" "spdk_dynamic"
-"$configs_path/run_remote_batched_rpc.sh" "framework_set_dynamic_scheduler"
+"$configs_path/run_remote_batched_rpc.sh" "framework_set_dynamic_scheduler" || true
 
 echo "[TB] begin service"
 "$configs_path/begin_remote_thunderbolt.sh"
@@ -190,14 +174,10 @@ for cap in "${TB_CAPS[@]}"; do
 
   # echo "[TB] rebuild & mount"
   # rebuild_and_mount
-  # echo "[TB] clean mounted disks before YCSB"
-  # clean_mounted_disks
+  echo "[TB] clean mounted disks before db_bench"
+  clean_mounted_disks
 
-  run_ycsb_into_dir "thunderbolt" "$cap"
-  aggregate_method_cap "thunderbolt" "$cap"
-
-  # echo "[TB] unmount disks"
-  # umount_all
+  run_db_into_dir "thunderbolt" "$cap"
 done
 
 echo "[TB] end service"
@@ -209,15 +189,27 @@ umount_all
 "$configs_path/disconnect_nvmf_target.sh" spdk
 stop_spdk_all
 
-# === 4) Combine all results ===
-python3 collect_ycsb_aggregates.py \
-  --out ycsb_throughput_combined.csv \
+# === 4) Aggregate & Plot ===
+echo "[AGG] aggregate db_bench results for all systems/caps"
+aggregate_one linux 500
+
+for cap in "${PASS_CAPS[@]}"; do
+  aggregate_one pass "$cap"
+done
+
+for cap in "${TB_CAPS[@]}"; do
+  aggregate_one thunderbolt "$cap"
+done
+
+# === 5) Collect all db_bench aggregates into one CSV ===
+python3 collect_db_bench_aggregates.py \
+  --out db_bench_combined.csv \
   --pass-caps "${PASS_CAPS[@]}" \
   --tb-caps   "${TB_CAPS[@]}" \
   --linux-caps "${LINUX_CAPS[@]}"
 
-# === 5) Final plotting ===
-echo "[PLOT] $PLOT_ALL"
-python3 "$PLOT_ALL"
+# === 6) Plot results ===
+echo "[PLOT] $PLOT_DB"
+python3 "$PLOT_DB"
 
-echo "[DONE] YCSB experiments completed."
+echo "[DONE] db_bench experiments completed."

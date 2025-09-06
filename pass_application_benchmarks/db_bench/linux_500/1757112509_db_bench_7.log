@@ -1,0 +1,113 @@
+Set seed to 1757112509783653 because --seed was 0
+Initializing RocksDB Options from the specified file
+Initializing RocksDB Options from command-line flags
+Integrated BlobDB: blob cache disabled
+Keys:       32 bytes each (+ 0 bytes user-defined timestamp)
+Values:     1024 bytes each (512 bytes after compression)
+Entries:    4000000
+Prefix:    0 bytes
+Keys per prefix:    0
+RawSize:    4028.3 MB (estimated)
+FileSize:   2075.2 MB (estimated)
+Write rate: 0 bytes/second
+Read rate: 0 ops/second
+Compression: Snappy
+Compression sampling rate: 0
+Memtablerep: SkipListFactory
+Perf Level: 1
+WARNING: Assertions are enabled; benchmarks unnecessarily slow
+------------------------------------------------
+Initializing RocksDB Options from the specified file
+Initializing RocksDB Options from command-line flags
+Integrated BlobDB: blob cache disabled
+DB path: [/mnt/test_disk_7]
+fillseq      :      24.113 micros/op 663268 ops/sec 96.492 seconds 64000000 operations;  668.0 MB/s
+Set seed to 1757112672444685 because --seed was 0
+Initializing RocksDB Options from the specified file
+Initializing RocksDB Options from command-line flags
+Integrated BlobDB: blob cache disabled
+Keys:       32 bytes each (+ 0 bytes user-defined timestamp)
+Values:     1024 bytes each (512 bytes after compression)
+Entries:    4000000
+Prefix:    0 bytes
+Keys per prefix:    0
+RawSize:    4028.3 MB (estimated)
+FileSize:   2075.2 MB (estimated)
+Write rate: 0 bytes/second
+Read rate: 0 ops/second
+Compression: Snappy
+Compression sampling rate: 0
+Memtablerep: SkipListFactory
+Perf Level: 1
+WARNING: Assertions are enabled; benchmarks unnecessarily slow
+------------------------------------------------
+Initializing RocksDB Options from the specified file
+Initializing RocksDB Options from command-line flags
+Integrated BlobDB: blob cache disabled
+DB path: [/mnt/test_disk_7]
+fillsync     :     166.366 micros/op 96087 ops/sec 50.120 seconds 4815872 operations;   96.8 MB/s (4000 ops)
+Set seed to 1757112783489676 because --seed was 0
+Initializing RocksDB Options from the specified file
+Initializing RocksDB Options from command-line flags
+Integrated BlobDB: blob cache disabled
+Keys:       32 bytes each (+ 0 bytes user-defined timestamp)
+Values:     1024 bytes each (512 bytes after compression)
+Entries:    4000000
+Prefix:    0 bytes
+Keys per prefix:    0
+RawSize:    4028.3 MB (estimated)
+FileSize:   2075.2 MB (estimated)
+Write rate: 0 bytes/second
+Read rate: 0 ops/second
+Compression: Snappy
+Compression sampling rate: 0
+Memtablerep: SkipListFactory
+Perf Level: 1
+WARNING: Assertions are enabled; benchmarks unnecessarily slow
+------------------------------------------------
+DB path: [/mnt/test_disk_7]
+overwrite    :      36.444 micros/op 438929 ops/sec 50.030 seconds 21959808 operations;  442.0 MB/s
+Set seed to 1757112901624529 because --seed was 0
+Initializing RocksDB Options from the specified file
+Initializing RocksDB Options from command-line flags
+Integrated BlobDB: blob cache disabled
+Keys:       32 bytes each (+ 0 bytes user-defined timestamp)
+Values:     1024 bytes each (512 bytes after compression)
+Entries:    4000000
+Prefix:    0 bytes
+Keys per prefix:    0
+RawSize:    4028.3 MB (estimated)
+FileSize:   2075.2 MB (estimated)
+Write rate: 0 bytes/second
+Read rate: 0 ops/second
+Compression: Snappy
+Compression sampling rate: 0
+Memtablerep: SkipListFactory
+Perf Level: 1
+WARNING: Assertions are enabled; benchmarks unnecessarily slow
+------------------------------------------------
+DB path: [/mnt/test_disk_7]
+readrandom   :       1.911 micros/op 8370512 ops/sec 50.001 seconds 418535984 operations; (0 of 24933999 found)
+
+Set seed to 1757113015159692 because --seed was 0
+Initializing RocksDB Options from the specified file
+Initializing RocksDB Options from command-line flags
+Integrated BlobDB: blob cache disabled
+Keys:       32 bytes each (+ 0 bytes user-defined timestamp)
+Values:     1024 bytes each (512 bytes after compression)
+Entries:    4000000
+Prefix:    0 bytes
+Keys per prefix:    0
+RawSize:    4028.3 MB (estimated)
+FileSize:   2075.2 MB (estimated)
+Write rate: 0 bytes/second
+Read rate: 0 ops/second
+Compression: Snappy
+Compression sampling rate: 0
+Memtablerep: SkipListFactory
+Perf Level: 1
+WARNING: Assertions are enabled; benchmarks unnecessarily slow
+------------------------------------------------
+DB path: [/mnt/test_disk_7]
+seekrandom   :  198639.819 micros/op 80 ops/sec 2582.121 seconds 207984 operations; (0 of 10999 found)
+

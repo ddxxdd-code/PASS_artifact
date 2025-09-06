@@ -25,8 +25,8 @@ AGG_SH="./aggregate_filebench_results.sh"
 command -v python3 >/dev/null || { echo "ERROR: python3 not in PATH."; exit 1; }
 
 # ────────────────────────── Parameters ──────────────────────────
-PASS_CAPS=(500 265 300 350 400)
-TB_CAPS=(500 265 300 350 400)
+PASS_CAPS=(500)
+TB_CAPS=(500)
 LINUX_CAPS=(500)
 
 CONNECT_SLEEP=1
@@ -81,91 +81,90 @@ run_all_into_dir() {
 }
 
 # ─────────────────────────── Flow ───────────────────────────────
-echo "[CLEANUP] pre-run"
-cleanup_all
-echo 0 > /proc/sys/kernel/randomize_va_space
+# echo "[CLEANUP] pre-run"
+# cleanup_all
+# echo 0 > /proc/sys/kernel/randomize_va_space
 
 # ───────────────── 1) Linux NVMe-oF @ 500W only ─────────────────
-echo "[LINUX] setup Linux NVMe-oF"
-"$configs_path/setup_linux_nvmf_target.sh"
-"$configs_path/connect_nvmf_target.sh" linux_nvmf
-pause "$CONNECT_SLEEP"
+# echo "[LINUX] setup Linux NVMe-oF"
+# "$configs_path/setup_linux_nvmf_target.sh"
+# "$configs_path/connect_nvmf_target.sh" linux_nvmf
+# pause "$CONNECT_SLEEP"
 
-echo "[LINUX] rebuild & mount"
-rebuild_and_mount
+# echo "[LINUX] rebuild & mount"
+# rebuild_and_mount
 
-for cap in "${LINUX_CAPS[@]}"; do
-  # 500 means “unlimited” per your instructions
-  echo "[LINUX] run_all (cap=$cap)"
-  run_all_into_dir "linux" "$cap"
-done
+# for cap in "${LINUX_CAPS[@]}"; do
+#   # 500 means “unlimited” per your instructions
+#   echo "[LINUX] run_all (cap=$cap)"
+#   run_all_into_dir "linux" "$cap"
+# done
 
-echo "[LINUX] unmount & disconnect"
-umount_all
-"$configs_path/disconnect_nvmf_target.sh" linux_nvmf
-"$configs_path/cleanup_linux_nvmf_target.sh"
-pause "$CONNECT_SLEEP"
+# echo "[LINUX] unmount & disconnect"
+# umount_all
+# "$configs_path/disconnect_nvmf_target.sh" linux_nvmf
+# "$configs_path/cleanup_linux_nvmf_target.sh"
+# pause "$CONNECT_SLEEP"
 
 # ──────── 2) SPDK bring-up (shared by PASS & Thunderbolt) ───────
-echo "[SPDK] setup"
-"$configs_path/clean_remote_target_all_10_disks.sh"
-"$configs_path/setup_spdk_nvmf_target.sh"
-"$configs_path/begin_spdk_nvmf_target.sh"
-"$configs_path/connect_nvmf_target.sh" spdk
-pause "$CONNECT_SLEEP"
+# echo "[SPDK] setup"
+# "$configs_path/clean_remote_target_all_10_disks.sh"
+# "$configs_path/setup_spdk_nvmf_target.sh"
+# "$configs_path/begin_spdk_nvmf_target.sh"
+# "$configs_path/connect_nvmf_target.sh" spdk
+# pause "$CONNECT_SLEEP"
 
 # ───────────────────── 2a) PASS caps loop ───────────────────────
-echo "[PASS] begin controller"
-"$configs_path/reset_remote_cpu.sh" || true
-"$configs_path/begin_remote_pass.sh"
+# echo "[PASS] begin controller"
+# "$configs_path/reset_remote_cpu.sh" || true
+# "$configs_path/begin_remote_pass.sh"
 
-for cap in "${PASS_CAPS[@]}"; do
-  echo "[PASS] set power budget ${cap}W"
-  "$configs_path/set_power_budget.sh" "$cap"
-  pause "$BUDGET_SLEEP"
+# for cap in "${PASS_CAPS[@]}"; do
+#   echo "[PASS] set power budget ${cap}W"
+#   "$configs_path/set_power_budget.sh" "$cap"
+#   pause "$BUDGET_SLEEP"
 
-  # echo "[PASS] rebuild & mount"
-  # rebuild_and_mount
+#   echo "[PASS] rebuild & mount"
+#   rebuild_and_mount
 
-  run_all_into_dir "pass" "$cap"
+#   run_all_into_dir "pass" "$cap"
 
-  echo "[PASS] unmount disks"
-  umount_all
-done
+#   echo "[PASS] unmount disks"
+#   umount_all
+# done
 
-echo "[PASS] end controller & reset CPU"
-"$configs_path/end_remote_pass.sh"
-"$configs_path/set_remote_cpu_schedutil.sh" 
+# echo "[PASS] end controller & reset CPU"
+# "$configs_path/end_remote_pass.sh"
+# "$configs_path/set_remote_cpu_schedutil.sh" 
 
 # ─────────────── 2b) Thunderbolt/Dynamic caps loop ──────────────
-echo "[TB] configure dynamic scheduler"
-"$configs_path/run_remote_batched_rpc.sh" "spdk_dynamic"
-"$configs_path/run_remote_batched_rpc.sh" "framework_set_dynamic_scheduler"
+# echo "[TB] configure dynamic scheduler"
+# "$configs_path/run_remote_batched_rpc.sh" "framework_set_dynamic_scheduler"
 
-echo "[TB] begin service"
-"$configs_path/begin_remote_thunderbolt.sh"
+# echo "[TB] begin service"
+# "$configs_path/begin_remote_thunderbolt.sh"
 
-for cap in "${TB_CAPS[@]}"; do
-  echo "[TB] set power budget ${cap}W"
-  "$configs_path/set_power_budget.sh" "$cap"
-  pause "$BUDGET_SLEEP"
+# for cap in "${TB_CAPS[@]}"; do
+#   echo "[TB] set power budget ${cap}W"
+#   "$configs_path/set_power_budget.sh" "$cap"
+#   pause "$BUDGET_SLEEP"
 
-  # echo "[TB] rebuild & mount"
-  # rebuild_and_mount
+#   echo "[TB] rebuild & mount"
+#   rebuild_and_mount
 
-  run_all_into_dir "thunderbolt" "$cap"
+#   run_all_into_dir "thunderbolt" "$cap"
 
-  echo "[TB] unmount disks"
-  umount_all
-done
+#   echo "[TB] unmount disks"
+#   umount_all
+# done
 
-echo "[TB] end service"
-"$configs_path/end_remote_thunderbolt.sh"
+# echo "[TB] end service"
+# "$configs_path/end_remote_thunderbolt.sh"
 
 # ──────────────────────── 3) Tear down SPDK ─────────────────────
-echo "[SPDK] disconnect & stop"
-"$configs_path/disconnect_nvmf_target.sh" spdk
-stop_spdk_all
+# echo "[SPDK] disconnect & stop"
+# "$configs_path/disconnect_nvmf_target.sh" spdk
+# stop_spdk_all
 
 # ──────────────── 4) Aggregate & Plot everything ────────────────
 aggregate_one() {
@@ -187,13 +186,12 @@ done
 
 # ─────────────────────── 5) Collect all into one CSV ───────────────────────
 python3 collect_filebench_aggregates.py \
-  --out filebench_combined.csv \
+  --out filebench_aggregated_all.csv \
   --pass-caps "${PASS_CAPS[@]}" \
   --tb-caps   "${TB_CAPS[@]}" \
   --linux-caps "${LINUX_CAPS[@]}"
 
-# ─────────────────────── 6) Plot results ───────────────────────
 echo "plot_filebench_workloads_max_power_one_figure.py"
-python3 plot_filebench_workloads_max_power_one_figure.py
+# python3 plot_filebench_workloads_max_power_one_figure.py
 
 echo "All runs delegated to run_all_filebench_tests.sh, aggregated, and plotted."

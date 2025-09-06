@@ -14,7 +14,7 @@ plt.rcParams.update({
 })
 
 # Load the data
-data = pd.read_csv('db_bench_combined.csv')
+data = pd.read_csv('db_bench_combined_ref.csv')
 
 # Define constants
 # methods = ["linux_rapl", "spdk_thunderbolt", "spdk_rapl", "pass_profiled"]

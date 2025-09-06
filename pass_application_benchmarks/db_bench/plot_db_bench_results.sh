@@ -15,7 +15,7 @@ current_path=$(pwd)
 configs_path="$current_path/../../utils"
 
 # db_bench entry script(s)
-RUN_DB_1="./run_db_bench_tests_60s_int.sh"   # preferred (from your screenshot)
+RUN_DB_1="./run_db_bench_tests_60s_int.sh"   # preferred
 RUN_DB_2="./db_bench_tests_60s_int"          # alternate name some trees use
 
 # Aggregation & plotting
@@ -48,7 +48,7 @@ pushd_quiet() { pushd "$1" >/dev/null; }
 popd_quiet() { popd >/dev/null; }
 
 rebuild_and_mount() {
-  "$configs_path/rebuild_filesystem_nvmf.sh"
+  "$configs_path/rebuild_filesystem_nvmf_disks.sh"
   "$configs_path/mount_all_10_nvmf_disks.sh"
 }
 
@@ -77,6 +77,7 @@ cleanup_all() {
   disconnect_all
   stop_spdk_all
   "$configs_path/cleanup_linux_nvmf_target.sh" || true
+  "$configs_path/clean_remote_target_all_10_disks.sh"
   set -e
 }
 
@@ -112,8 +113,8 @@ pause "$CONNECT_SLEEP"
 
 echo "[LINUX] rebuild & mount"
 rebuild_and_mount
-echo "[LINUX] clean mounted disks before db_bench"
-clean_mounted_disks
+# echo "[LINUX] clean mounted disks before db_bench"
+# clean_mounted_disks
 
 for cap in "${LINUX_CAPS[@]}"; do
   echo "[LINUX] db_bench run_all (cap=$cap)"
@@ -128,12 +129,15 @@ pause "$CONNECT_SLEEP"
 
 # === 2) SPDK bring-up (shared for PASS & Thunderbolt) ===
 echo "[SPDK] setup"
+"$configs_path/clean_remote_target_all_10_disks.sh"
 "$configs_path/setup_spdk_nvmf_target.sh"
 "$configs_path/begin_spdk_nvmf_target.sh"
 "$configs_path/connect_nvmf_target.sh" spdk
 pause "$CONNECT_SLEEP"
 
 # --- 2a) PASS ---
+echo "[PASS] rebuild & mount"
+rebuild_and_mount
 echo "[PASS] begin controller"
 "$configs_path/reset_remote_cpu.sh" || true
 "$configs_path/begin_remote_pass.sh"
@@ -143,15 +147,12 @@ for cap in "${PASS_CAPS[@]}"; do
   "$configs_path/set_power_budget.sh" "$cap"
   pause "$BUDGET_SLEEP"
 
-  echo "[PASS] rebuild & mount"
-  rebuild_and_mount
+  # echo "[PASS] rebuild & mount"
+  # rebuild_and_mount
   echo "[PASS] clean mounted disks before db_bench"
   clean_mounted_disks
 
   run_db_into_dir "pass" "$cap"
-
-  echo "[PASS] unmount disks"
-  umount_all
 done
 
 echo "[PASS] end controller & reset CPU"
@@ -160,7 +161,7 @@ echo "[PASS] end controller & reset CPU"
 
 # --- 2b) Thunderbolt/Dynamic ---
 echo "[TB] configure dynamic scheduler"
-"$configs_path/run_remote_batched_rpc.sh" "spdk_dynamic" || \
+"$configs_path/run_remote_batched_rpc.sh" "spdk_dynamic"
 "$configs_path/run_remote_batched_rpc.sh" "framework_set_dynamic_scheduler" || true
 
 echo "[TB] begin service"
@@ -171,15 +172,12 @@ for cap in "${TB_CAPS[@]}"; do
   "$configs_path/set_power_budget.sh" "$cap"
   pause "$BUDGET_SLEEP"
 
-  echo "[TB] rebuild & mount"
-  rebuild_and_mount
+  # echo "[TB] rebuild & mount"
+  # rebuild_and_mount
   echo "[TB] clean mounted disks before db_bench"
   clean_mounted_disks
 
   run_db_into_dir "thunderbolt" "$cap"
-
-  echo "[TB] unmount disks"
-  umount_all
 done
 
 echo "[TB] end service"
@@ -187,6 +185,7 @@ echo "[TB] end service"
 
 # === 3) Tear down SPDK ===
 echo "[SPDK] disconnect & stop"
+umount_all
 "$configs_path/disconnect_nvmf_target.sh" spdk
 stop_spdk_all
 
@@ -202,12 +201,15 @@ for cap in "${TB_CAPS[@]}"; do
   aggregate_one thunderbolt "$cap"
 done
 
-# Optional compatibility symlink (if anything expects thderbolt_500):
-if [[ -d thunderbolt_500 && ! -e thderbolt_500 ]]; then
-  ln -s thunderbolt_500 thderbolt_500
-fi
+# === 5) Collect all db_bench aggregates into one CSV ===
+python3 collect_db_bench_aggregates.py \
+  --out db_bench_combined.csv \
+  --pass-caps "${PASS_CAPS[@]}" \
+  --tb-caps   "${TB_CAPS[@]}" \
+  --linux-caps "${LINUX_CAPS[@]}"
 
+# === 6) Plot results ===
 echo "[PLOT] $PLOT_DB"
 python3 "$PLOT_DB"
 
-echo "[DONE] db_bench pipeline complete."
+echo "[DONE] db_bench experiments completed."

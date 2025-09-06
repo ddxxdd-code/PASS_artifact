@@ -2,7 +2,7 @@
 
 # Function to display usage
 usage() {
-    echo "Usage: $0 -w|--workload <test> -s|--scheduler <scheduler>"
+    echo "Usage: $0 -w|--workload <test>"
     exit 1
 }
 
