@@ -1,7 +1,4 @@
-# PASS Artifact
-Artifact package of the paper PASS: A Power Adaptive Storage Server
-
-## Purpose
+# PASS Artifact Evaluation
 This directory contains artifact for evaluating the PASS system described in the paper: PASS: A Power Adaptive Storage Server.
 
 The artifact includes the following components:
@@ -34,6 +31,45 @@ Update power budget to a file reside in the same directory as PASS online contro
 To run all experiments at once, run `run_all_experiments.sh` as `sudo`.
 
 To run individual benchmarks, enter the `pass_fio_experiments` and `pass_application_benchmarks` directories to find directories named after figure numbers. For example, to run experiments for Figure 5, enter `pass_fio_experiments/fig5` and run `run_fig5.sh` as `sudo`.
+
+### Example experiment output
+#### Fio experiments
+The output of running fio experiments looks like the following:
+```
+# Experiment script
+$ sudo ./plot_figure1.sh
+
+# Expected behavior
+On standard output the script will run initilization cleanup, run benchmarks under Linux, then cleanup and start SPDK instance, then run benchmarks under SPDK of different power budgets by running PASS online contoller and thunderbolt.
+
+# Expected last lines of output
+Clean
+Wrote 27 rows to latency_data.csv
+Normalized results written to latency_data_normalized.csv
+Plotting figure 1
+[Done] figure 1 experiments finished
+```
+
+#### Application benchmarks
+The output of running application benchmarks looks like the following:
+```
+# Experiment script
+$ sudo ./plot_db_bench_results.sh
+
+# Expected behavior
+On standard output the script will run initilization cleanup, run benchmarks under Linux, then cleanup and start SPDK instance, then run benchmarks under SPDK of different power budgets by running PASS online contoller and thunderbolt.
+
+# Expected last lines of output
+Aggregated metrics written → pass_500/pass_db_bench_aggregated_metrics.csv
+All combinations processed.
+[collect] wrote 66 rows → db_bench_combined.csv
+[PLOT] plot_db_bench_all_one_figure_insert_unlimited.py
+/home/dedongx/PASS_AE/pass_application_benchmarks/db_bench/plot_db_bench_all_one_figure_insert_unlimited.py:101: UserWarning: FixedFormatter should only be used together with FixedLocator
+  ax_unlimited.set_xticklabels(unlimited_labels, rotation=15)
+Figure with throughput and non adaptive case saved as db_bench_throughput_with_unlimited_power_case.pdf.
+[DONE] db_bench experiments completed.
+```
+The last line of output indicates that the experiments are completed successfully.
 
 ## System Requirement
 ### Hardware dependencies. 
