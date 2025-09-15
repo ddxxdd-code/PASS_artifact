@@ -1,0 +1,4 @@
+bdev_test_get_nvme_power_state Nvme0n1
+bdev_test_get_nvme_power_state Nvme1n1
+bdev_test_get_nvme_power_state Nvme2n1
+bdev_test_get_nvme_power_state Nvme3n1

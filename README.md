@@ -22,6 +22,22 @@ PASS is designed to use with (SPDK)[https://spdk.io/]. Please first install SPDK
 
 To run PASS's offline profiler, follow instructions in the cpu_model directory to run offline profile of CPU.
 
+### Step-by-step installation
+1. Prepare setup of two servers, one initiator (running workloads, like fio) and one storage target (with NVMe SSDs and running SPDK), make sure the network bandwidth between the machines are not bottlenecking storage.
+
+2. On the target side:
+- Install SPDk: Download SPDK source code from `https://github.com/spdk/spdk/archive/refs/tags/v23.09.zip` to get SPDK. Install SPDK with RDMA using `./configure --with-rdma && make -j$proc`
+- Configure SPDK NVMe-oF target: follow the example configuration file of `nvmf_rdma_10_disk_static_config.json`, modify the PCIe address of disks and the socket of listening to reflect the setup of the target server (set disk PCI address based on `lspci` outputs and write the socket of listening at the IP address of the NIC on the machine that connects to the initiator).
+- Install power control softwares: apt install powercap, cpupower, and perf (for RAPL reading).
+- PASS offline profile: Use the PASS offline profiler in artifact package by running `cpu_model/run.sh` and take the final profiled CPU policy to the downloaded SPDK directory.
+- PASS online controller: Put the `online_controller/powercap_PASS_profile_based.py` to the SPDK directory where policy resides. Modify the SSD model of read/write bandwidth and SSD idle and maximum power according to the type of SSD used on the target machine.
+- Running SPDK NVMe-oF target + PASS: Setup SPDK by running `sudo ./script/setup.sh` in SPDK directory. Start SPDK NVMe-oF via RDMA using command `./build/bin/nvmf_tgt -c nvmf_rdma_10_disk_static_config.json -m 0xFF` to run with 8 cores. Then put the PID of the `nvmf_tgt` to a cgroup, default to `/sys/fs/cgroup/user/cgroup.procs`. Then put power budget, like 400W to `budget` file via "echo 400 > budget". Then running PASS online controller: "sudo python3 powercap_PASS_profile_based.py".
+
+3. On the initiator side:
+- Install software needed: nvme-cli, fio, filebench, RocksDB, YCSB
+- Connect to NVMe-oF target: `sudo ./utils/connect_nvmf_target.sh spdk` (adjust the IP address to the IP address of the target nvmf_tgt listening on)
+- Example: run fio experiments: Write fio job description file to use the newly attached NVMe-oF disks (change the fio job's filenema= to the attached remote disks). Then run `sudo fio experiment_config.fio` to issue workload. Similar for application benchmarks, only need to mount the disks and make filesystem on them before experiments.
+
 ## Usage
 After starting SPDK application and add SPDK's PID to cgroup at `/sys/fs/cgroup/user/cgroup.procs` (we assume the cgroup is called user here, change accordingly if needed), run PASS online controller with `sudo`.
 

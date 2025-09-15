@@ -1,0 +1,10 @@
+bdev_compress_delete COMP_Nvme0n1
+bdev_compress_delete COMP_Nvme1n1
+bdev_compress_delete COMP_Nvme2n1
+bdev_compress_delete COMP_Nvme3n1
+bdev_compress_delete COMP_Nvme4n1
+bdev_compress_delete COMP_Nvme5n1
+bdev_compress_delete COMP_Nvme6n1
+bdev_compress_delete COMP_Nvme7n1
+bdev_compress_delete COMP_Nvme8n1
+bdev_compress_delete COMP_Nvme9n1

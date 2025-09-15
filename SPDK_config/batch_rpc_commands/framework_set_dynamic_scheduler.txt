@@ -1,0 +1,1 @@
+framework_set_scheduler dynamic

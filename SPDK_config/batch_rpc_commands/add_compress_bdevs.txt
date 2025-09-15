@@ -1,0 +1,10 @@
+bdev_compress_create --base_bdev Nvme0n1 --pm_path /mnt/ramdisk
+bdev_compress_create --base_bdev Nvme1n1 --pm_path /mnt/ramdisk
+bdev_compress_create --base_bdev Nvme2n1 --pm_path /mnt/ramdisk
+bdev_compress_create --base_bdev Nvme3n1 --pm_path /mnt/ramdisk
+bdev_compress_create --base_bdev Nvme4n1 --pm_path /mnt/ramdisk
+bdev_compress_create --base_bdev Nvme5n1 --pm_path /mnt/ramdisk
+bdev_compress_create --base_bdev Nvme6n1 --pm_path /mnt/ramdisk
+bdev_compress_create --base_bdev Nvme7n1 --pm_path /mnt/ramdisk
+bdev_compress_create --base_bdev Nvme8n1 --pm_path /mnt/ramdisk
+bdev_compress_create --base_bdev Nvme9n1 --pm_path /mnt/ramdisk

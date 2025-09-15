@@ -1,0 +1,1 @@
+framework_set_scheduler --load-limit 99 --core-limit 99 dynamic

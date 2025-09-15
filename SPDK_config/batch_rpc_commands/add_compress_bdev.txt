@@ -1,0 +1,1 @@
+bdev_compress_create --base_bdev Nvme0n1 --pm_path /mnt/ramdisk
