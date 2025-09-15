@@ -1,0 +1,263 @@
+{
+    "subsystems": [
+        {
+            "subsystem": "iobuf",
+            "config": [
+              {
+                "method": "iobuf_set_options",
+                "params": {
+                  "small_pool_count": 32767,
+                  "large_pool_count": 16383
+                }
+              }
+            ]
+          },
+          {
+            "subsystem": "sock",
+            "config": [
+              {
+                "method": "sock_impl_set_options",
+                "params": {
+                  "impl_name": "posix",
+                  "recv_buf_size": 2097152,
+                  "send_buf_size": 2097152,
+                  "enable_recv_pipe": true,
+                  "enable_quickack": true,
+                  "enable_placement_id": 0,
+                  "enable_zerocopy_send_server": true,
+                  "enable_zerocopy_send_client": false,
+                  "zerocopy_threshold": 0,
+                  "tls_version": 0,
+                  "enable_ktls": true
+                }
+              }
+            ]
+          },
+        {
+        "subsystem": "bdev",
+        "config": [
+                {
+                    "method": "bdev_nvme_attach_controller",
+                    "params": {
+                        "trtype": "PCIe",
+                        "name":"Nvme0",
+                        "traddr":"0000:6a:00.0"
+                    }
+                },
+                {
+                    "method": "bdev_nvme_attach_controller",
+                    "params": {
+                        "trtype": "PCIe",
+                        "name":"Nvme1",
+                        "traddr":"0000:6b:00.0"
+                    }
+                },
+                {
+                  "method": "bdev_nvme_attach_controller",
+                  "params": {
+                      "trtype": "PCIe",
+                      "name":"Nvme2",
+                      "traddr":"0000:94:00.0"
+                  }
+              },
+              {
+                  "method": "bdev_nvme_attach_controller",
+                  "params": {
+                      "trtype": "PCIe",
+                      "name":"Nvme3",
+                      "traddr":"0000:95:00.0"
+                  }
+              },
+              {
+                "method": "bdev_nvme_attach_controller",
+                "params": {
+                    "trtype": "PCIe",
+                    "name":"Nvme4",
+                    "traddr":"0000:96:00.0"
+                }
+            },
+            {
+                "method": "bdev_nvme_attach_controller",
+                "params": {
+                    "trtype": "PCIe",
+                    "name":"Nvme5",
+                    "traddr":"0000:97:00.0"
+                }
+            },
+            {
+              "method": "bdev_nvme_attach_controller",
+              "params": {
+                  "trtype": "PCIe",
+                  "name":"Nvme6",
+                  "traddr":"0000:be:00.0"
+              }
+          },
+          {
+              "method": "bdev_nvme_attach_controller",
+              "params": {
+                  "trtype": "PCIe",
+                  "name":"Nvme7",
+                  "traddr":"0000:bf:00.0"
+              }
+          },
+          {
+            "method": "bdev_nvme_attach_controller",
+            "params": {
+                "trtype": "PCIe",
+                "name":"Nvme8",
+                "traddr":"0000:c0:00.0"
+            }
+        },
+        {
+            "method": "bdev_nvme_attach_controller",
+            "params": {
+                "trtype": "PCIe",
+                "name":"Nvme9",
+                "traddr":"0000:c1:00.0"
+            }
+        }
+            ]
+        },
+        {
+            "subsystem": "nvmf",
+            "config": [
+                {
+                    "method": "nvmf_create_transport",
+                    "params": {
+                      "trtype": "RDMA",
+                      "max_queue_depth": 1280,
+                      "max_io_qpairs_per_ctrlr": 128,
+                      "in_capsule_data_size": 16384,
+                      "max_io_size": 131072,
+                      "io_unit_size": 16384,
+                      "max_aq_depth": 128,
+                      "num_shared_buffers": 8192,
+                      "buf_cache_size": 32,
+                      "dif_insert_or_strip": false,
+                      "zcopy": false,
+                      "c2h_success": true,
+                      "sock_priority": 0,
+                      "abort_timeout_sec": 1,
+                      "ack_timeout": 0
+                    }
+                  },
+                  {
+                    "method": "nvmf_create_subsystem",
+                    "params": {
+                      "nqn": "nqn.2016-06.io.spdk:cnode1",
+                      "allow_any_host": true,
+                      "serial_number": "SPDK00000000000001",
+                      "model_number": "SPDK_Controller1",
+                      "max_namespaces": 32,
+                      "min_cntlid": 1,
+                      "max_cntlid": 65519,
+                      "ana_reporting": false
+                    }
+                  },
+                  {
+                    "method": "nvmf_subsystem_add_ns",
+                    "params": {
+                      "nqn": "nqn.2016-06.io.spdk:cnode1",
+                      "namespace": {
+                        "bdev_name": "Nvme0n1"
+                      }
+                    }
+                  },
+                  {
+                    "method": "nvmf_subsystem_add_ns",
+                    "params": {
+                      "nqn": "nqn.2016-06.io.spdk:cnode1",
+                      "namespace": {
+                        "bdev_name": "Nvme1n1"
+                      }
+                    }
+                  },
+                  {
+                    "method": "nvmf_subsystem_add_ns",
+                    "params": {
+                      "nqn": "nqn.2016-06.io.spdk:cnode1",
+                      "namespace": {
+                        "bdev_name": "Nvme2n1"
+                      }
+                    }
+                  },
+                  {
+                    "method": "nvmf_subsystem_add_ns",
+                    "params": {
+                      "nqn": "nqn.2016-06.io.spdk:cnode1",
+                      "namespace": {
+                        "bdev_name": "Nvme3n1"
+                      }
+                    }
+                  },
+                  {
+                    "method": "nvmf_subsystem_add_ns",
+                    "params": {
+                      "nqn": "nqn.2016-06.io.spdk:cnode1",
+                      "namespace": {
+                        "bdev_name": "Nvme4n1"
+                      }
+                    }
+                  },
+                  {
+                    "method": "nvmf_subsystem_add_ns",
+                    "params": {
+                      "nqn": "nqn.2016-06.io.spdk:cnode1",
+                      "namespace": {
+                        "bdev_name": "Nvme5n1"
+                      }
+                    }
+                  },
+                  {
+                    "method": "nvmf_subsystem_add_ns",
+                    "params": {
+                      "nqn": "nqn.2016-06.io.spdk:cnode1",
+                      "namespace": {
+                        "bdev_name": "Nvme6n1"
+                      }
+                    }
+                  },
+                  {
+                    "method": "nvmf_subsystem_add_ns",
+                    "params": {
+                      "nqn": "nqn.2016-06.io.spdk:cnode1",
+                      "namespace": {
+                        "bdev_name": "Nvme7n1"
+                      }
+                    }
+                  },
+                  {
+                    "method": "nvmf_subsystem_add_ns",
+                    "params": {
+                      "nqn": "nqn.2016-06.io.spdk:cnode1",
+                      "namespace": {
+                        "bdev_name": "Nvme8n1"
+                      }
+                    }
+                  },
+                  {
+                    "method": "nvmf_subsystem_add_ns",
+                    "params": {
+                      "nqn": "nqn.2016-06.io.spdk:cnode1",
+                      "namespace": {
+                        "bdev_name": "Nvme9n1"
+                      }
+                    }
+                  },
+                  {
+                    "method": "nvmf_subsystem_add_listener",
+                    "params": {
+                      "nqn": "nqn.2016-06.io.spdk:cnode1",
+                      "listen_address": {
+                        "trtype": "RDMA",
+                        "adrfam": "IPv4",
+                        "traddr": "192.168.3.50",
+                        "trsvcid": "4420"
+                      },
+                      "secure_channel": false
+                    }
+                  }
+            ]
+          }
+    ]
+}
